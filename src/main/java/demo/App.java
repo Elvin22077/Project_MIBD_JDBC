@@ -2,6 +2,7 @@
 author : 
 Syalom Elvin Pasau - 6182201077
 Imanuel Alexander Here - 6182201013
+Muhammad Zakki Baldani - 6182201076
 */
 
 package demo;
@@ -19,7 +20,7 @@ public class App {
         String url = "jdbc:sqlserver://MSI\\SQLEXPRESS01\\instanceName:50089;databaseName=Project_MIBD_JDBC";
         String username = "i22077"; 
         String password = "i22077";
-        //supanika
+        
         // Buat koneksi antara project java dengan server SQL.
         Connection connection = DriverManager.getConnection(url, username, password);
         Statement stmt = connection.createStatement();
