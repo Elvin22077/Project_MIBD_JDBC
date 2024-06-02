@@ -328,7 +328,7 @@ public class Perbaikan {
                 break;
         
             default:
-                System.out.println("Tolong masukkan input yang valid.");
+                System.out.println("Mohon masukkan input yang valid.");
                 break;
         }
     }
@@ -419,7 +419,8 @@ public class Perbaikan {
                     break;
                 
                 case "2":
-                    
+                    System.out.println("1) Mengubah waktu mulai sewa unit.");
+                    System.out.println("2) Mengubah waktu selesai sewa unit.");
                     break;
                 default:
                     break;
