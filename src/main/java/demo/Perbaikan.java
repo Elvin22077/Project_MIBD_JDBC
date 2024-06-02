@@ -109,13 +109,13 @@ public class Perbaikan {
             stmt.executeUpdate(createTableUnit);
 
             String createTableKecamatan = "CREATE TABLE Kecamatan ("
-                + "idKecamatan INT PRIMARY KEY IDENTITY(1,1) NOT NULL, "
+                + "idKecamatan INT PRIMARY KEY NOT NULL, "
                 + "namaKecamatan VARCHAR(30) NOT NULL"
                 + ")";
             stmt.executeUpdate(createTableKecamatan);
 
             String createTableKelurahan = "CREATE TABLE Kelurahan ("
-                + "idKelurahan INT PRIMARY KEY IDENTITY(1,1) NOT NULL, "
+                + "idKelurahan INT PRIMARY KEY NOT NULL, "
                 + "namaKelurahan VARCHAR(30) NOT NULL"
                 + ")";
             stmt.executeUpdate(createTableKelurahan);
