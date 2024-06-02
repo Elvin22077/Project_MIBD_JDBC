@@ -93,7 +93,7 @@ public class Perbaikan {
             stmt.executeUpdate(createTablePelanggan);
 
             String createTableTower = "CREATE TABLE Tower ("
-            + "idTower INT PRIMARY KEY IDENTITY(1,1) NOT NULL, "
+            + "idTower INT PRIMARY KEY NOT NULL, "
             + "nama VARCHAR(1) NOT NULL"
             + ")";
             stmt.executeUpdate(createTableTower);
