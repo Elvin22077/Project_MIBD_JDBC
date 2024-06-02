@@ -1,6 +1,7 @@
 package demo;
 
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 
 public class Perbaikan {
@@ -25,7 +26,7 @@ public class Perbaikan {
     }
 
     private static void interfaceInput(Scanner sc, Connection connection){
-        System.out.println("----PILIH UNTUK LOGIN----");
+        System.out.println("---- LOGIN SewaY ----");
         System.out.println("1) Login sebagai Agen.");
         System.out.println("2) Login sebagai Pelanggan.");
         System.out.println("3) Exit.");
@@ -49,7 +50,7 @@ public class Perbaikan {
     }
 
     private static void interfaceLoginPelanggan(Scanner sc, Connection connection){
-        System.out.println("----LOGIN / REGISTRASI PELANGGAN----");
+        System.out.println("---- LOGIN / REGISTRASI PELANGGAN SewaY ----");
         System.out.println("1) Registrasi sebagai pelanggan baru.");
         System.out.println("2) Login sebagai pelanggan lama.");
         System.out.println("3) Logout.");
@@ -229,8 +230,10 @@ public class Perbaikan {
 
                 int OTP = generateOTP();
                 System.out.println("OTP untuk registrasi pelanggan : "+OTP);
+
+                boolean login = false;
     
-                while (true) {
+                while (!login) {
                     System.out.print("Masukkan kode OTP: ");
                     int input = sc.nextInt();
     
@@ -244,7 +247,7 @@ public class Perbaikan {
                         System.out.printf("Login pelanggan sebagai %s berhasil!\n", name);
                         System.out.println();
                         interfaceUtamaPelanggan(sc, connection);
-                        break;
+                        login = true;
                     }
                     else{
                         System.out.println("Kode OTP salah, harap masukkan kembali.");
@@ -261,8 +264,8 @@ public class Perbaikan {
     }
 
     private static void interfaceLoginAgen(Scanner sc, Connection connection){
-        System.out.println("----LOGIN AGEN----");
-        System.out.println("1) Fitur-fitur Agen.");
+        System.out.println("---- LOGIN AGEN ----");
+        System.out.println("1) Kelola Unit Apartemen.");
         System.out.println("2) Exit.");
         System.out.println();
         System.out.print("Masukkan pilihan (angkanya saja): ");
@@ -289,8 +292,9 @@ public class Perbaikan {
     }
 
     private static void interfaceUtamaAgen(Scanner sc, Connection connection){
-        System.out.println("1) Mengelola data unit apartemen.");
-        System.out.println("2) Mengelola jadwal ketersediaan.");
+        System.out.println("---- Selamat Datang Agen SewaY ----");
+        System.out.println("1) Kelola Data Unit.");
+        System.out.println("2) Kelola Ketersediaan Unit.");
         System.out.println("3) Melihat unit yang telah dipesan pada waktu tertentu.");
         System.out.println("4) Melihat daftar check in dan check out pada tanggal tertentu.");
         System.out.println("5) Melihat laporan utilitas penyewaan unit-unit yang dikelola pada rentang waktu tertentu.");
@@ -361,11 +365,12 @@ public class Perbaikan {
 
                     preparedStatement.executeUpdate();
 
-                    System.out.println("Jenis unit sudah dirubah!");
+                    System.out.println("Jenis unit sudah dirubah!\n");
+                    mengubahJenisUnit(connection, sc);
                 }
                 catch(SQLException e){
-                    System.out.println("Maaf, gagal mengubah jenis Unit.");
-                    interfaceUtamaAgen(sc, connection);
+                    System.out.println("Maaf, gagal mengubah jenis Unit.\n");
+                    mengubahJenisUnit(connection, sc);
                 }
                 break;
         
@@ -376,6 +381,7 @@ public class Perbaikan {
     }
 
     private static void pengelolaanUnit(Connection connection, Scanner sc ){
+        System.out.println("---- PENGELOLAAN UNIT SewaY ----");
         System.out.println("1) Melihat status unit.");
         System.out.println("2) Mengubah tanggal ketersediaan unit.");
         System.out.println("3) Mengubah status ketersediaan unit.");
@@ -391,6 +397,7 @@ public class Perbaikan {
         try{
             switch (input) {
                 case "1":
+                    System.out.println("---- Status Unit ----");
                     String query = "SELECT "
                     + "Unit.kodeUnit, "
                     + "Unit.statusKetersediaan, "
@@ -419,15 +426,109 @@ public class Perbaikan {
                     break;
                 
                 case "2":
-                    System.out.println("1) Mengubah waktu mulai sewa unit.");
-                    System.out.println("2) Mengubah waktu selesai sewa unit.");
+                    System.out.println("---- Ubah Tanggal Ketersediaan Unit ----");
+                    System.out.println("1) Mengubah tanggal mulai sewa unit.");
+                    System.out.println("2) Mengubah tanggal selesai sewa unit.");
+                    System.out.println("3) Exit.");
+                    System.out.println();
+
+                    System.out.print("Masukkan pilihan(angkanya saja): ");
+                    String input2 = sc.next();
+                    sc.nextLine();
+                    System.out.println();
+                    switch (input2) {
+                        case "1":
+                            System.out.print("Masukkan kode Unit yang ingin diubah waktu mulai sewa: ");
+                            String kodeUnit = sc.next();
+                            sc.nextLine();
+                            System.out.println();
+                            System.out.print("Masukkan tanggal mulai sewa yang baru(format : yyyy-mm-dd): ");
+                            String newDate = sc.next();
+                            sc.nextLine();
+
+                            query = "UPDATE UnitPelanggan SET waktuSewa = ? WHERE kodeUnit = ?";
+                            preparedStatement = connection.prepareStatement(query);
+                            
+                            preparedStatement.setString(1, newDate);
+                            preparedStatement.setString(2, kodeUnit);
+
+                            preparedStatement.executeUpdate();
+                            System.out.println("Berhasil mengubah tanggal akhir sewa dari unit.\n");
+                            pengelolaanUnit(connection, sc);
+                            break;
+
+                        case "2": 
+                            System.out.print("Masukkan kode Unit yang ingin diubah waktu akhir sewa: ");
+                            kodeUnit = sc.next();
+                            sc.nextLine();
+                            System.out.println();
+                            System.out.print("Masukkan tanggal akhir sewa yang baru(format : yyyy-mm-dd): ");
+                            newDate = sc.next();
+                            sc.nextLine();
+
+                            query = "UPDATE UnitPelanggan SET waktuSelesai = ? WHERE kodeUnit = ?";
+                            preparedStatement = connection.prepareStatement(query);
+                            
+                            preparedStatement.setString(1, newDate);
+                            preparedStatement.setString(2, kodeUnit);
+
+                            preparedStatement.executeUpdate();
+
+                            System.out.println("Berhasil mengubah tanggal akhir sewa dari unit.\n");
+                            break;
+                    
+                        default:
+                            System.out.println("Pilihan tersebut tidak tersedia.");
+                            System.out.println();
+                            pengelolaanUnit(connection, sc);
+                            break;
+                    }
                     break;
+
+                case "3":
+                    System.out.println("---- Ubah Status Ketersediaan Unit ----");
+                    System.out.print("Masukkan kode unit yang akan diubah status ketersediaannya: ");
+                    String kodeUnit = sc.next();
+                    sc.nextLine();
+                    System.out.println();
+
+                    System.out.print("Masukkan status ketersediaan yang baru: ");
+                    String statusKetersediaan = sc.next();
+                    sc.nextLine();
+                    System.out.println();
+
+                    try{
+                        query = "UPDATE Unit SET statusKetersediaan = ? WHERE kodeUnit = ?";
+
+                        preparedStatement = connection.prepareStatement(query);
+                        preparedStatement.setString(1, statusKetersediaan);
+                        preparedStatement.setString(2, kodeUnit);
+
+                        preparedStatement.executeUpdate();
+                        System.out.println("Berhasil mengubah status ketersediaan unit.");
+                        System.out.println();
+                        pengelolaanUnit(connection, sc);
+                    }
+                    catch(SQLException e){
+                        System.out.println("Gagal mengubah status ketersediaan unit.");
+                        System.out.println();
+                        pengelolaanUnit(connection, sc);
+                    }
+                    break;
+
+                case "5":
+                    pengelolaanUnit(connection, sc);
+                    break;
+
                 default:
+                    System.out.println("Pilihan tersebut tidak tersedia.");
+                    System.out.println();
+                    pengelolaanUnit(connection, sc);
                     break;
             }
         }
         catch(SQLException e){
-
+            System.out.println("Terdapat error dalam mengelola Unit.");
         }
     }
 
