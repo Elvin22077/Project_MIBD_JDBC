@@ -1,3 +1,5 @@
+SET IDENTITY_INSERT Pelanggan ON;
+
 INSERT INTO Pelanggan (idPelanggan, NIK, Nama, NoHp, alamat) VALUES ('1', '9082774586144822', 'Emmanuelle', '089907747791', 'Hattiesburg');
 INSERT INTO Pelanggan (idPelanggan, NIK, Nama, NoHp, alamat) VALUES ('2', '2554555426265235', 'Lilliana', '087665236854', 'Columbus');
 INSERT INTO Pelanggan (idPelanggan, NIK, Nama, NoHp, alamat) VALUES ('3', '7542878476426453', 'Kaylah', '085288683921', 'Glendale');
@@ -28,3 +30,5 @@ INSERT INTO Pelanggan (idPelanggan, NIK, Nama, NoHp, alamat) VALUES ('27', '1777
 INSERT INTO Pelanggan (idPelanggan, NIK, Nama, NoHp, alamat) VALUES ('28', '2589979145978505', 'Noah', '082575142622', 'Chesapeake');
 INSERT INTO Pelanggan (idPelanggan, NIK, Nama, NoHp, alamat) VALUES ('29', '8167101335197641', 'Stanley', '083059175916', 'Ontario');
 INSERT INTO Pelanggan (idPelanggan, NIK, Nama, NoHp, alamat) VALUES ('30', '4045917284281473', 'Imani', '088432125623', 'Newport Beach');
+
+SET IDENTITY_INSERT Pelanggan OFF;
