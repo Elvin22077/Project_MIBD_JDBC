@@ -26,10 +26,10 @@ public class Pelanggan{
 
         switch (input) {
             case "1":
-                registerPelanggan(connection, sc);
+                registerPelanggan();
                 break;
             case "2":
-                loginPelanggan(connection, sc);
+                loginPelanggan();
                 break;
             default:
                 App.interfaceInput();
@@ -37,7 +37,8 @@ public class Pelanggan{
         }
     }
 
-    public void registerPelanggan(Connection connection, Scanner sc){
+    
+    public void registerPelanggan(){
         try{
             System.out.print("Masukkan NIK Pelanggan: ");
             String NIK = sc.next();
@@ -72,22 +73,22 @@ public class Pelanggan{
                     System.out.println("Registrasi Pelanggan berhasil.");
                     System.out.println();
                     interfaceLoginPelanggan();
+                    break;
                 }
                 else{
                     System.out.println("Kode OTP salah, harap masukkan kembali.");
                     System.out.println();
                 }
             }
-        }
-        catch(InputMismatchException e){
+        } catch (InputMismatchException e){
             System.out.println("Harap masukkan data dengan benar.");
-        }
-        catch(SQLException e){
+        } catch(SQLException e){
             System.out.println("Gagal memasukkan data.");
         }
     }
 
-    public void loginPelanggan(Connection connection, Scanner sc){
+    
+    public void loginPelanggan(){
         try{
             System.out.print("Masukkan nomor Handphone: ");
             String noHP = sc.next();
@@ -158,16 +159,16 @@ public class Pelanggan{
     
         switch (input) {
             case "1":
-                mencariApartemen(connection, sc);
+                mencariApartemen();
                 break;
             case "2":
-                memesanUnitApartemen(connection, sc);
+                memesanUnitApartemen();
                 break;
             case "3":
-                checkInOut(connection, sc);
+                checkIn();
                 break;
             case "4":
-                memberikanRatingDanKomentar(connection, sc);
+                memberikanRatingDanKomentar();
                 break;
             case "5":
                 interfaceLoginPelanggan();
@@ -179,11 +180,11 @@ public class Pelanggan{
         }
     }
     
-    public void mencariApartemen(Connection connection, Scanner sc) {
+    public void mencariApartemen() {
         System.out.println("---- MENCARI APARTEMEN SewaY ----");
-        System.out.println("1) Mencari berdasarkan lokasi.");
+        System.out.println("1) Mencari berdasarkan tanggal ketersediaan.");
         System.out.println("2) Mencari berdasarkan harga.");
-        System.out.println("3) Mencari berdasarkan kategori.");
+        System.out.println("3) Mencari berdasarkan rating.");
         System.out.println("4) Exit.");
         System.out.println();
         System.out.print("Masukkan pilihan(angkanya saja): ");
@@ -192,39 +193,47 @@ public class Pelanggan{
     
         switch (input) {
             case "1":
-                mencariApartemenBerdasarkanLokasi(connection, sc);
+                mencariApartemenBerdasarkanTanggalKetersediaan();
                 break;
             case "2":
-                mencariApartemenBerdasarkanHarga(connection, sc);
+                mencariApartemenBerdasarkanHarga();
                 break;
             case "3":
-                mencariApartemenBerdasarkanKategori(connection, sc);
+                mencariApartemenBerdasarkanRating();
                 break;
             case "4":
                 interfaceUtamaPelanggan();
                 break;
             default:
                 System.out.println("Pilihan tidak tersedia.");
-                mencariApartemen(connection, sc);
+                mencariApartemen();
                 break;
         }
+        mencariApartemen();
     }
     
-    public void mencariApartemenBerdasarkanLokasi(Connection connection, Scanner sc) {
+    public void mencariApartemenBerdasarkanTanggalKetersediaan() {
         try {
-            System.out.print("Masukkan lokasi yang ingin dicari (e.g. Jakarta, Bandung, etc.): ");
-            String lokasi = sc.nextLine();
+            System.out.print("Masukkan tanggal awal sewa (YYYY-MM-DD): ");
+            String startDate = sc.nextLine();
     
-            String query = "SELECT * FROM Unit JOIN Kelurahan ON Unit.kodeUnit = Kelurahan.kodeUnit WHERE Kelurahan.namaKelurahan LIKE?";
+            System.out.print("Masukkan tanggal akhir sewa (YYYY-MM-DD): ");
+            String endDate = sc.nextLine();
+    
+            String query = "SELECT U.kodeUnit, U.harga, U.statusKetersediaan " +
+                           "FROM UnitPelanggan UP " +
+                           "JOIN Unit U ON UP.kodeUnit = U.kodeUnit " +
+                           "WHERE UP.waktuSewa >= ? AND UP.waktuSelesai <= ? " +
+                           "AND U.statusKetersediaan = 'kosong'";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, "%" + lokasi + "%");
+            preparedStatement.setString(1, startDate);
+            preparedStatement.setString(2, endDate);
     
             ResultSet rs = preparedStatement.executeQuery();
     
             System.out.println("Hasil pencarian:");
             while (rs.next()) {
                 System.out.println("Kode Unit: " + rs.getString("kodeUnit"));
-                System.out.println("Nama Kelurahan: " + rs.getString("namaKelurahan"));
                 System.out.println("Harga: " + rs.getFloat("harga"));
                 System.out.println("Status Ketersediaan: " + rs.getString("statusKetersediaan"));
                 System.out.println();
@@ -234,7 +243,7 @@ public class Pelanggan{
         }
     }
     
-    public void mencariApartemenBerdasarkanHarga(Connection connection, Scanner sc) {
+    public void mencariApartemenBerdasarkanHarga() {
         try {
             System.out.print("Masukkan harga minimal yang ingin dicari: ");
             float hargaMin = sc.nextFloat();
@@ -244,7 +253,7 @@ public class Pelanggan{
             float hargaMax = sc.nextFloat();
             sc.nextLine();
     
-            String query = "SELECT * FROM Unit WHERE harga BETWEEN? AND?";
+            String query = "SELECT * FROM Unit WHERE harga BETWEEN ? AND ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setFloat(1, hargaMin);
             preparedStatement.setFloat(2, hargaMax);
@@ -263,23 +272,23 @@ public class Pelanggan{
         }
     }
     
-    public void mencariApartemenBerdasarkanKategori(Connection connection, Scanner sc) {
+    public void mencariApartemenBerdasarkanRating() {
         try {
-            System.out.print("Masukkan kategori apartemen yang ingin dicari (e.g. studio, atau 2BR): ");
-            String kategori = sc.nextLine();
+            System.out.print("Masukkan minimal rating yang ingin dicari: ");
+            float minRating = sc.nextFloat();
+            sc.nextLine();
     
-            String query = "SELECT * FROM Unit WHERE jenis LIKE?";
+            String query = "SELECT * FROM Review WHERE rating >= ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, "%" + kategori + "%");
+            preparedStatement.setFloat(1, minRating);
     
             ResultSet rs = preparedStatement.executeQuery();
     
-            System.out.println("Hasil pencarian:");
+            System.out.println("Hasil pencarian berdasarkan rating:");
             while (rs.next()) {
                 System.out.println("Kode Unit: " + rs.getString("kodeUnit"));
-                System.out.println("Jenis: " + rs.getString("jenis"));
-                System.out.println("Harga: " + rs.getFloat("harga"));
-                System.out.println("Status Ketersediaan: " + rs.getString("statusKetersediaan"));
+                System.out.println("Rating: " + rs.getFloat("rating"));
+                System.out.println("Komentar: " + rs.getString("komentar"));
                 System.out.println();
             }
         } catch (SQLException e) {
@@ -287,7 +296,7 @@ public class Pelanggan{
         }
     }
     
-    public void memesanUnitApartemen(Connection connection, Scanner sc) {
+    public void memesanUnitApartemen() {
         System.out.print("Masukkan kode unit yang ingin dipesan: ");
         String kodeUnit = sc.next();
         sc.nextLine();
@@ -333,12 +342,14 @@ public class Pelanggan{
         }
     }
     
-    public void checkInOut(Connection connection, Scanner sc) {
-        System.out.print("Masukkan kode unit yang ingin dicek in/out: ");
+    public void checkIn() {
+        System.out.print("Masukkan kode unit yang ingin dicek in: ");
         String kodeUnit = sc.next();
         sc.nextLine();
     
         try {
+            //update menjadi PENUH
+            updateUnitAvailability(kodeUnit);
             // Cari data pemesanan berdasarkan kodeUnit
             String query = "SELECT * FROM UnitPelanggan WHERE kodeUnit = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -378,14 +389,33 @@ public class Pelanggan{
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+    public void updateUnitAvailability(String kodeUnit) {
+        try {
+            String updateQuery = "UPDATE Unit SET statusKetersediaan = 'PENUH' WHERE kodeUnit = ?";
+            PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+            updateStatement.setString(1, kodeUnit);
+            int rowsAffected = updateStatement.executeUpdate();
     
-    public void memberikanRatingDanKomentar(Connection connection, Scanner sc) {
+            if (rowsAffected > 0) {
+                System.out.println("Unit availability updated successfully.");
+            } else {
+                System.out.println("Unit with kodeUnit '" + kodeUnit + "' not found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating unit availability: " + e.getMessage());
+        }
+    }
+    
+    
+    public void memberikanRatingDanKomentar() {
         System.out.print("Masukkan kode unit yang ingin diberi rating dan komentar: ");
         String kodeUnit = sc.next();
         sc.nextLine();
     
         try {
-            String query = "SELECT * FROM Unit WHERE kodeUnit =?";
+            updateUnitAvailabilityToEmpty(kodeUnit);
+            String query = "SELECT * FROM Unit WHERE kodeUnit = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, kodeUnit);
     
@@ -421,4 +451,22 @@ public class Pelanggan{
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+    public void updateUnitAvailabilityToEmpty(String kodeUnit) {
+        try {
+            String updateQuery = "UPDATE Unit SET statusKetersediaan = 'kosong' WHERE kodeUnit = ?";
+            PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+            updateStatement.setString(1, kodeUnit);
+            int rowsAffected = updateStatement.executeUpdate();
+    
+            if (rowsAffected > 0) {
+                System.out.println("Unit availability updated to 'kosong' successfully.");
+            } else {
+                System.out.println("Unit with kodeUnit '" + kodeUnit + "' not found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating unit availability: " + e.getMessage());
+        }
+    }
+    
 }
