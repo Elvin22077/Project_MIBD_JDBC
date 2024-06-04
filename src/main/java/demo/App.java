@@ -17,7 +17,7 @@ public class App {
     static Connection connection;
     static Statement stmt;
 
-    public App(){
+    public static void connect(){
         try{
             App.sc = new Scanner(System.in);
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -41,9 +41,8 @@ public class App {
         pelanggan = new Pelanggan(sc, connection);
     }
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        App app = new App();
-
-        app.instanceAllEntity();
+        App.connect();
+        App.instanceAllEntity();
         App.interfaceInput();
     }
 
@@ -75,7 +74,7 @@ public class App {
         }
     }
 
-    protected void instanceAllEntity(){
+    protected static void instanceAllEntity(){
         try{
             String createTableAgen = "CREATE TABLE Agen ("
             + "idAgen INT PRIMARY KEY IDENTITY(1,1) NOT NULL, "
@@ -96,8 +95,7 @@ public class App {
             stmt.executeUpdate(createTablePelanggan);
 
             String createTableTower = "CREATE TABLE Tower ("
-            + "idTower INT PRIMARY KEY NOT NULL, "
-            + "nama VARCHAR(1) NOT NULL"
+            + "idTower VARCHAR(1) PRIMARY KEY NOT NULL"
             + ")";
             stmt.executeUpdate(createTableTower);
 
@@ -107,7 +105,9 @@ public class App {
                 + "lantai INT NOT NULL, "
                 + "jenis VARCHAR(6) NOT NULL, "
                 + "statusKetersediaan VARCHAR(6) NOT NULL, "
-                + "harga FLOAT NOT NULL"
+                + "harga MONEY NOT NULL, "
+                + "idTower VARCHAR(1) NOT NULL, "
+                + "FOREIGN KEY (idTower) REFERENCES Tower(idTower)"
                 + ")";
             stmt.executeUpdate(createTableUnit);
 
@@ -141,7 +141,6 @@ public class App {
             String createTableUnitPelanggan = "CREATE TABLE UnitPelanggan ("
                 + "kodeUnit VARCHAR(6) NOT NULL, "
                 + "idPelanggan INT NOT NULL, "
-                + "tarif FLOAT NOT NULL, "
                 + "waktuSewa DATE NOT NULL, "
                 + "waktuSelesai DATE NOT NULL, "
                 + "FOREIGN KEY (kodeUnit) REFERENCES Unit(kodeUnit), "

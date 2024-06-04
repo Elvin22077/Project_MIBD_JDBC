@@ -59,23 +59,23 @@ public class Agen{
         switch (input) {
             case "1":
                 // mengelola unit apartemen
-                mengubahJenisUnit(connection, sc);
+                mengubahJenisUnit();
                 break;
 
             case "2":
-                pengelolaanUnit(connection, sc);
+                pengelolaanUnit();
                 break;
 
             case "3":
-
+                melihatUnit();
                 break;
 
             case "4":
-
+                melihatCheckInDanCheckOutPelanggan();
                 break;
 
             case "5":
-
+            
                 break;
 
             case "6":
@@ -88,7 +88,7 @@ public class Agen{
         }
     }
 
-    public void mengubahJenisUnit(Connection connection, Scanner sc){
+    public void mengubahJenisUnit(){
         System.out.println("1) Ubah jenis unit.");
         System.out.println("2) Exit.");
         System.out.println();
@@ -117,11 +117,11 @@ public class Agen{
                     preparedStatement.executeUpdate();
 
                     System.out.println("Jenis unit sudah dirubah!\n");
-                    mengubahJenisUnit(connection, sc);
+                    mengubahJenisUnit();
                 }
                 catch(SQLException e){
                     System.out.println("Maaf, gagal mengubah jenis Unit.\n");
-                    mengubahJenisUnit(connection, sc);
+                    mengubahJenisUnit();
                 }
                 break;
         
@@ -131,7 +131,7 @@ public class Agen{
         }
     }
 
-    public void pengelolaanUnit(Connection connection, Scanner sc ){
+    public void pengelolaanUnit(){
         System.out.println("---- PENGELOLAAN UNIT SewaY ----");
         System.out.println("1) Melihat status unit.");
         System.out.println("2) Mengubah tanggal ketersediaan unit.");
@@ -205,7 +205,7 @@ public class Agen{
 
                             preparedStatement.executeUpdate();
                             System.out.println("Berhasil mengubah tanggal akhir sewa dari unit.\n");
-                            pengelolaanUnit(connection, sc);
+                            pengelolaanUnit();
                             break;
 
                         case "2": 
@@ -231,7 +231,7 @@ public class Agen{
                         default:
                             System.out.println("Pilihan tersebut tidak tersedia.");
                             System.out.println();
-                            pengelolaanUnit(connection, sc);
+                            pengelolaanUnit();
                             break;
                     }
                     break;
@@ -258,23 +258,23 @@ public class Agen{
                         preparedStatement.executeUpdate();
                         System.out.println("Berhasil mengubah status ketersediaan unit.");
                         System.out.println();
-                        pengelolaanUnit(connection, sc);
+                        pengelolaanUnit();
                     }
                     catch(SQLException e){
                         System.out.println("Gagal mengubah status ketersediaan unit.");
                         System.out.println();
-                        pengelolaanUnit(connection, sc);
+                        pengelolaanUnit();
                     }
                     break;
 
                 case "5":
-                    pengelolaanUnit(connection, sc);
+                    pengelolaanUnit();
                     break;
 
                 default:
                     System.out.println("Pilihan tersebut tidak tersedia.");
                     System.out.println();
-                    pengelolaanUnit(connection, sc);
+                    pengelolaanUnit();
                     break;
             }
         }
@@ -282,4 +282,97 @@ public class Agen{
             System.out.println("Terdapat error dalam mengelola Unit.");
         }
     }
+
+    public void melihatUnit(){
+        System.out.print("Masukkan tanggal untuk melihat unit yang tersedia(format : yyyy-mm-dd): ");
+        String tanggal = sc.next();
+        sc.nextLine();
+
+        try{
+            String query = "SELECT * FROM UnitPelanggan WHERE waktuSewa <= ? AND waktuSelesai >= ?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tanggal);
+            preparedStatement.setString(2, tanggal);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            System.out.printf("%-10s%-10s%-10s%-10s%-10s%-10s%n", 
+                    ("kodeUnit"),
+                    ("noUnit"),
+                    ("lantai"),
+                    ("jenis"),
+                    ("status"),
+                    ("harga"));
+
+            while(rs.next()){
+                String kodeUnit = rs.getString("kodeUnit");
+                String joinQuery = "SELECT * FROM UnitPelanggan JOIN Unit ON UnitPelanggan.kodeUnit = Unit.kodeUnit WHERE Unit.kodeUnit = ?";
+                preparedStatement = connection.prepareStatement(joinQuery);
+                preparedStatement.setString(1, kodeUnit);
+
+                ResultSet joinset = preparedStatement.executeQuery();
+                while(joinset.next()){
+                    System.out.printf("%-10s%-10d%-10d%-10s%-10s%-10f%n", 
+                    joinset.getString("kodeUnit"),
+                    joinset.getInt("noUnit"),
+                    joinset.getInt("lantai"),
+                    joinset.getString("jenis"),
+                    joinset.getString("statusKetersediaan"),
+                    joinset.getDouble("harga"));
+
+                }
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void melihatCheckInDanCheckOutPelanggan(){
+        System.out.print("Masukkan tanggal: ");
+        String tanggal = sc.next();
+        sc.nextLine();
+
+        try{
+            // Cek In
+            String queryCheckIn = "SELECT * FROM UnitPelanggan JOIN Pelanggan ON UnitPelanggan.idPelanggan = Pelanggan.idPelanggan WHERE waktuSewa = ?"; 
+            PreparedStatement preparedStatement = connection.prepareStatement(queryCheckIn);
+            preparedStatement.setString(1, tanggal);
+
+            ResultSet rsCekIn = preparedStatement.executeQuery();
+            System.out.println("--- CHECK IN ---");
+            System.out.printf("%-15s%-10s%n",
+            "idPelanggan",
+            "Nama Pelanggan");
+            while(rsCekIn.next()){
+                System.out.printf("%-15d%-10s%n",
+                rsCekIn.getInt("idPelanggan"),
+                rsCekIn.getString("Nama"));
+            }
+
+            // Cek In
+            String queryCheckOut = "SELECT * FROM UnitPelanggan JOIN Pelanggan ON UnitPelanggan.idPelanggan = Pelanggan.idPelanggan WHERE waktuSelesai  = ?"; 
+            preparedStatement = connection.prepareStatement(queryCheckOut);
+            preparedStatement.setString(1, tanggal);
+
+            System.out.println("--- CHECK OUT ---");
+            System.out.printf("%-15s%-10s%n",
+            "idPelanggan",
+            "Nama Pelanggan");
+            ResultSet rsCekOut = preparedStatement.executeQuery();
+            while(rsCekOut.next()){
+                System.out.printf("%-15d%-10s%n",
+                rsCekOut.getInt("idPelanggan"),
+                rsCekOut.getString("Nama"));
+            }
+            System.out.println();
+            interfaceUtamaAgen();
+        }
+        catch(SQLException e){
+            System.out.println("Gagal mencari data check-in dan check-out");
+        }
+    }
+
+    public void 
 }
