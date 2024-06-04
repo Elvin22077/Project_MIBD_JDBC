@@ -10,6 +10,7 @@ The project started by making an Entity Relationship Diagram of the topics, then
 
 
 ## Technologies Used
+in this project, we used primarily Java 19.0.2 and SQL Server
 
 ## Contributors
 [Imanuel Alexander Here](https://github.com/iamalexhere)
