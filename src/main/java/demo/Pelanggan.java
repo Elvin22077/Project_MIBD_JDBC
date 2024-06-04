@@ -81,7 +81,6 @@ public class Pelanggan{
         }
         catch(InputMismatchException e){
             System.out.println("Harap masukkan data dengan benar.");
-
         }
         catch(SQLException e){
             System.out.println("Gagal memasukkan data.");
@@ -266,7 +265,7 @@ public class Pelanggan{
     
     public void mencariApartemenBerdasarkanKategori(Connection connection, Scanner sc) {
         try {
-            System.out.print("Masukkan kategori apartemen yang ingin dicari (e.g. studio, 1BR, 2BR, etc.): ");
+            System.out.print("Masukkan kategori apartemen yang ingin dicari (e.g. studio, atau 2BR): ");
             String kategori = sc.nextLine();
     
             String query = "SELECT * FROM Unit WHERE jenis LIKE?";
@@ -340,6 +339,52 @@ public class Pelanggan{
         sc.nextLine();
     
         try {
+            // Cari data pemesanan berdasarkan kodeUnit
+            String query = "SELECT * FROM UnitPelanggan WHERE kodeUnit = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, kodeUnit);
+            ResultSet rs = preparedStatement.executeQuery();
+    
+            if (rs.next()) {
+                System.out.println("Kode Unit: " + rs.getString("kodeUnit"));
+                System.out.println("ID Pelanggan: " + rs.getInt("idPelanggan"));
+                System.out.println("Tanggal Sewa: " + rs.getDate("waktuSewa"));
+                System.out.println("Tanggal Selesai: " + rs.getDate("waktuSelesai"));
+                System.out.println();
+    
+                System.out.print("Masukkan tanggal check in (format: yyyy-mm-dd): ");
+                String tglCheckIn = sc.next();
+                sc.nextLine();
+    
+                System.out.print("Masukkan tanggal check out (format: yyyy-mm-dd): ");
+                String tglCheckOut = sc.next();
+                sc.nextLine();
+    
+                // Validasi tanggal check in dan check out
+                java.sql.Date waktuSewa = rs.getDate("waktuSewa");
+                java.sql.Date waktuSelesai = rs.getDate("waktuSelesai");
+                java.sql.Date checkInDate = java.sql.Date.valueOf(tglCheckIn);
+                java.sql.Date checkOutDate = java.sql.Date.valueOf(tglCheckOut);
+    
+                if (checkInDate.before(waktuSewa) || checkOutDate.after(waktuSelesai)) {
+                    System.out.println("Tanggal check in/check out tidak valid dengan tanggal pemesanan.");
+                } else {
+                    System.out.println("Check in dan check out berhasil.");
+                }
+            } else {
+                System.out.println("Unit apartemen tidak ditemukan atau belum dipesan.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+    
+    public void memberikanRatingDanKomentar(Connection connection, Scanner sc) {
+        System.out.print("Masukkan kode unit yang ingin diberi rating dan komentar: ");
+        String kodeUnit = sc.next();
+        sc.nextLine();
+    
+        try {
             String query = "SELECT * FROM Unit WHERE kodeUnit =?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, kodeUnit);
@@ -353,33 +398,27 @@ public class Pelanggan{
                 System.out.println("Status Ketersediaan: " + rs.getString("statusKetersediaan"));
                 System.out.println();
     
-                System.out.print("Masukkan tanggal check in (format: yyyy-mm-dd): ");
-                String tglCheckIn = sc.next();
+                System.out.print("Masukkan rating (antara 1.0 - 5.0): ");
+                float rating = sc.nextFloat();
                 sc.nextLine();
     
-                System.out.print("Masukkan tanggal check out (format: yyyy-mm-dd): ");
-                String tglCheckOut = sc.next();
-                sc.nextLine();
+                System.out.print("Masukkan komentar: ");
+                String komentar = sc.nextLine();
     
-                query = "INSERT INTO CheckInOut (kodeUnit, idPelanggan, tglCheckIn, tglCheckOut) VALUES (?,?,?,?)";
+                query = "INSERT INTO Review (kodeUnit, rating, komentar) VALUES (?,?,?)";
                 preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, kodeUnit);
-                preparedStatement.setInt(2, 1); // contoh idPelanggan =1
-                preparedStatement.setString(3, tglCheckIn);
-                preparedStatement.setString(4, tglCheckOut);
+                preparedStatement.setFloat(2, rating);
+                preparedStatement.setString(3, komentar);
     
                 preparedStatement.executeUpdate();
     
-                System.out.println("Check in/check out berhasil.");
+                System.out.println("Rating dan komentar berhasil ditambahkan.");
             } else {
                 System.out.println("Unit apartemen tidak ditemukan.");
             }
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-    }
-    
-    public void memberikanRatingDanKomentar(Connection connection, Scanner sc) {
-        System.out.println("Rating");
     }
 }
