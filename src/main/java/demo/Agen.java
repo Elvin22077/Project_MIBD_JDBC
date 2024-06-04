@@ -4,7 +4,7 @@ package demo;
 import java.util.*;
 import java.sql.*;
 
-public class Agen{
+public class Agen extends App{
     private Scanner sc;
     private Connection connection;
 
@@ -12,6 +12,53 @@ public class Agen{
         super();
         this.sc = sc;
         this.connection = connection;
+    }
+
+    public void loginAgen(){
+        System.out.print("Masukkan nomor Hp agen yang sudah terdaftar: ");
+        String noHp = sc.next();
+        sc.nextLine();
+
+        try{
+            String query = "SELECT NIK FROM Agen WHERE NoHp = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, noHp);
+
+            ResultSet tempAgen = preparedStatement.executeQuery();
+
+            if(!tempAgen.isBeforeFirst()){
+                System.out.println("Maaf, nomor Hp belum terdaftar. ");
+                System.out.println();
+                super.interfaceInput();
+            }
+            else{
+                boolean login = false;
+                int OTP = super.generateOTP();
+                System.out.println("OTP untuk login: "+OTP);
+                while(!login){
+                    System.out.println();
+                    System.out.print("Masukkan OTP: ");
+                    int inputOTP = sc.nextInt();
+                    sc.nextLine();
+                    if(OTP==inputOTP){
+                        System.out.println("Berhasil login sebagai agen! Selamat Datang!");
+                        login = true;
+                        System.out.println();
+                        interfaceLoginAgen();
+                    }
+                    else{
+                        System.out.println("Maaf, kode OTP salah. Silakan coba lagi.");
+                    }
+                }
+            }
+            
+        }
+        catch(SQLException e){
+            System.out.println("Gagal login sebagai agen.");
+            System.out.println();
+            super.interfaceInput();
+        }
     }
 
     public void interfaceLoginAgen(){
@@ -28,7 +75,7 @@ public class Agen{
                 interfaceUtamaAgen();
             }
             else if(input.equals("2")){
-                App.interfaceInput();
+                super.interfaceInput();
             }
             else{
                 System.out.println("Maaf pilihan tidak tersedia.");
@@ -38,7 +85,7 @@ public class Agen{
         catch(InputMismatchException e){
             System.out.println("Harap memasukkan pilihan dengan benar");
             System.out.println();
-            App.interfaceInput();
+            super.interfaceInput();
         }
     }
 
@@ -75,7 +122,7 @@ public class Agen{
                 break;
 
             case "5":
-            
+                melihatLaporanUtilitas();
                 break;
 
             case "6":
@@ -174,6 +221,8 @@ public class Agen{
                         rs.getDate("waktuSewa"),
                         rs.getDate("waktuSelesai"));
                     }
+                    System.out.println();
+                    pengelolaanUnit();
                     break;
                 
                 case "2":
@@ -226,6 +275,8 @@ public class Agen{
                             preparedStatement.executeUpdate();
 
                             System.out.println("Berhasil mengubah tanggal akhir sewa dari unit.\n");
+                            System.out.println();
+                            pengelolaanUnit();
                             break;
                     
                         default:
@@ -330,7 +381,7 @@ public class Agen{
     }
 
     public void melihatCheckInDanCheckOutPelanggan(){
-        System.out.print("Masukkan tanggal: ");
+        System.out.print("Masukkan tanggal(format : yyyy-mm-dd): ");
         String tanggal = sc.next();
         sc.nextLine();
 
@@ -371,8 +422,50 @@ public class Agen{
         }
         catch(SQLException e){
             System.out.println("Gagal mencari data check-in dan check-out");
+            System.out.println();
+            interfaceUtamaAgen();
         }
     }
 
-    public void 
+    public void melihatLaporanUtilitas(){
+        System.out.println("Masukkan rentang tanggal(format : yyyy-mm-dd): ");
+        System.out.print("Mulai dari: ");
+        String tanggal1 = sc.next();
+        sc.nextLine();
+        System.out.print("Hingga: ");
+        String tanggal2 = sc.next();
+        sc.nextLine();
+
+        try{
+            String query = "SELECT Unit.kodeUnit, count(Unit.kodeUnit) AS 'countUnit', sum(harga) AS 'countHargaUnit'"
+            + "from UnitPelanggan join Unit on UnitPelanggan.kodeUnit = Unit.kodeUnit "
+            + "where UnitPelanggan.waktuSewa between ? AND ? "
+            + "group by Unit.kodeUnit";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tanggal1);
+            preparedStatement.setString(2, tanggal2);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            System.out.printf("%-20s%-30s%-30s%n",
+            "Kode Unit",
+            "Banyak Unit yang disewa",
+            "Total harga sewa unit");
+            while(rs.next()){
+                System.out.printf("%-20s%-30d%-30f%n", 
+                rs.getString("kodeUnit"), 
+                rs.getInt("countUnit"), 
+                rs.getDouble("countHargaUnit"));
+            }
+            System.out.println();
+            interfaceUtamaAgen();
+
+        }
+        catch(SQLException e){
+            System.out.println("Gagal mencari Utilitas");
+            System.out.println();
+            interfaceUtamaAgen();
+        }
+    }
 }
