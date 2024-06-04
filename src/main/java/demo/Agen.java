@@ -318,8 +318,12 @@ public class Agen extends App{
                     }
                     break;
 
+                case "4":
+                    gantiTarifUnit();
+                    break;
+
                 case "5":
-                    pengelolaanUnit();
+                    interfaceUtamaAgen();
                     break;
 
                 default:
@@ -374,6 +378,8 @@ public class Agen extends App{
 
                 }
             }
+            System.out.println();
+            pengelolaanUnit();
         }
         catch(SQLException e){
             e.printStackTrace();
@@ -418,10 +424,36 @@ public class Agen extends App{
                 rsCekOut.getString("Nama"));
             }
             System.out.println();
-            interfaceUtamaAgen();
+            pengelolaanUnit();
         }
         catch(SQLException e){
             System.out.println("Gagal mencari data check-in dan check-out");
+            System.out.println();
+            pengelolaanUnit();
+        }
+    }
+
+    public void gantiTarifUnit(){
+        System.out.print("Masukkan kode unit yang akan diubah tarifnya: ");
+        String kodeUnit = sc.next();
+        sc.nextLine();
+        System.out.print("Masukka harga yang baru: ");
+        double harga = sc.nextDouble();
+
+        try{
+            String query = "UPDATE Unit SET harga = ? WHERE kodeUnit = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setDouble(1, harga);
+            preparedStatement.setString(2, kodeUnit);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("Harga unit berhasil diubah!");
+            System.out.println();
+            interfaceUtamaAgen();
+        }
+        catch(SQLException e){
+            System.out.println("Gagal mengganti harga unit.");
             System.out.println();
             interfaceUtamaAgen();
         }
