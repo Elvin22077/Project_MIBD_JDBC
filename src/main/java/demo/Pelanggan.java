@@ -165,7 +165,7 @@ public class Pelanggan{
                 memesanUnitApartemen();
                 break;
             case "3":
-                checkInOut();
+                checkIn();
                 break;
             case "4":
                 memberikanRatingDanKomentar();
@@ -296,7 +296,6 @@ public class Pelanggan{
         }
     }
     
-    
     public void memesanUnitApartemen() {
         System.out.print("Masukkan kode unit yang ingin dipesan: ");
         String kodeUnit = sc.next();
@@ -343,12 +342,14 @@ public class Pelanggan{
         }
     }
     
-    public void checkInOut() {
-        System.out.print("Masukkan kode unit yang ingin dicek in/out: ");
+    public void checkIn() {
+        System.out.print("Masukkan kode unit yang ingin dicek in: ");
         String kodeUnit = sc.next();
         sc.nextLine();
     
         try {
+            //update menjadi PENUH
+            updateUnitAvailability(kodeUnit);
             // Cari data pemesanan berdasarkan kodeUnit
             String query = "SELECT * FROM UnitPelanggan WHERE kodeUnit = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -388,6 +389,24 @@ public class Pelanggan{
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+    public void updateUnitAvailability(String kodeUnit) {
+        try {
+            String updateQuery = "UPDATE Unit SET statusKetersediaan = 'PENUH' WHERE kodeUnit = ?";
+            PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+            updateStatement.setString(1, kodeUnit);
+            int rowsAffected = updateStatement.executeUpdate();
+    
+            if (rowsAffected > 0) {
+                System.out.println("Unit availability updated successfully.");
+            } else {
+                System.out.println("Unit with kodeUnit '" + kodeUnit + "' not found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating unit availability: " + e.getMessage());
+        }
+    }
+    
     
     public void memberikanRatingDanKomentar() {
         System.out.print("Masukkan kode unit yang ingin diberi rating dan komentar: ");
@@ -395,6 +414,7 @@ public class Pelanggan{
         sc.nextLine();
     
         try {
+            updateUnitAvailabilityToEmpty(kodeUnit);
             String query = "SELECT * FROM Unit WHERE kodeUnit = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, kodeUnit);
@@ -431,4 +451,22 @@ public class Pelanggan{
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+    public void updateUnitAvailabilityToEmpty(String kodeUnit) {
+        try {
+            String updateQuery = "UPDATE Unit SET statusKetersediaan = 'kosong' WHERE kodeUnit = ?";
+            PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+            updateStatement.setString(1, kodeUnit);
+            int rowsAffected = updateStatement.executeUpdate();
+    
+            if (rowsAffected > 0) {
+                System.out.println("Unit availability updated to 'kosong' successfully.");
+            } else {
+                System.out.println("Unit with kodeUnit '" + kodeUnit + "' not found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating unit availability: " + e.getMessage());
+        }
+    }
+    
 }
