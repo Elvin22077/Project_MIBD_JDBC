@@ -6,11 +6,15 @@ import java.util.*;
 public class Pelanggan{
     private Scanner sc;
     private Connection connection;
+    private int idPelanggan;
 
     public Pelanggan(Scanner sc, Connection connection) {
         super();
         this.sc = sc;
         this.connection = connection;
+    }
+    public int getIdPelanggan() {
+        return this.idPelanggan;
     }
 
     public void interfaceLoginPelanggan(){
@@ -125,6 +129,7 @@ public class Pelanggan{
                             name = rs.getString("Nama");
                             break;
                         }
+                        this.idPelanggan = rs.getInt("idPelanggan");
                         System.out.printf("Login pelanggan sebagai %s berhasil!\n", name);
                         System.out.println();
                         interfaceUtamaPelanggan();
@@ -172,12 +177,13 @@ public class Pelanggan{
                 break;
             case "5":
                 interfaceLoginPelanggan();
-                break;
+                return;
             default:
                 System.out.println("Pilihan tidak tersedia.");
                 interfaceUtamaPelanggan();
                 break;
         }
+        interfaceUtamaPelanggan();
     }
     
     public void mencariApartemen() {
@@ -323,13 +329,12 @@ public class Pelanggan{
                 String tglSelesai = sc.next();
                 sc.nextLine();
     
-                query = "INSERT INTO UnitPelanggan (kodeUnit, idPelanggan, tarif, waktuSewa, waktuSelesai) VALUES (?, ?, ?, ?, ?)";
+                query = "INSERT INTO UnitPelanggan (kodeUnit, idPelanggan, waktuSewa, waktuSelesai) VALUES (?, ?, ?, ?)";
                 preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, kodeUnit);
-                preparedStatement.setInt(2, 1); // replace with actual idPelanggan
-                preparedStatement.setFloat(3, rs.getFloat("harga"));
-                preparedStatement.setString(4, tglMulai);
-                preparedStatement.setString(5, tglSelesai);
+                preparedStatement.setInt(2, this.getIdPelanggan());
+                preparedStatement.setString(3, tglMulai);
+                preparedStatement.setString(4, tglSelesai);
     
                 preparedStatement.executeUpdate();
     
@@ -350,42 +355,7 @@ public class Pelanggan{
         try {
             //update menjadi PENUH
             updateUnitAvailability(kodeUnit);
-            // Cari data pemesanan berdasarkan kodeUnit
-            String query = "SELECT * FROM UnitPelanggan WHERE kodeUnit = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, kodeUnit);
-            ResultSet rs = preparedStatement.executeQuery();
-    
-            if (rs.next()) {
-                System.out.println("Kode Unit: " + rs.getString("kodeUnit"));
-                System.out.println("ID Pelanggan: " + rs.getInt("idPelanggan"));
-                System.out.println("Tanggal Sewa: " + rs.getDate("waktuSewa"));
-                System.out.println("Tanggal Selesai: " + rs.getDate("waktuSelesai"));
-                System.out.println();
-    
-                System.out.print("Masukkan tanggal check in (format: yyyy-mm-dd): ");
-                String tglCheckIn = sc.next();
-                sc.nextLine();
-    
-                System.out.print("Masukkan tanggal check out (format: yyyy-mm-dd): ");
-                String tglCheckOut = sc.next();
-                sc.nextLine();
-    
-                // Validasi tanggal check in dan check out
-                java.sql.Date waktuSewa = rs.getDate("waktuSewa");
-                java.sql.Date waktuSelesai = rs.getDate("waktuSelesai");
-                java.sql.Date checkInDate = java.sql.Date.valueOf(tglCheckIn);
-                java.sql.Date checkOutDate = java.sql.Date.valueOf(tglCheckOut);
-    
-                if (checkInDate.before(waktuSewa) || checkOutDate.after(waktuSelesai)) {
-                    System.out.println("Tanggal check in/check out tidak valid dengan tanggal pemesanan.");
-                } else {
-                    System.out.println("Check in dan check out berhasil.");
-                }
-            } else {
-                System.out.println("Unit apartemen tidak ditemukan atau belum dipesan.");
-            }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
@@ -406,7 +376,6 @@ public class Pelanggan{
             System.out.println("Error updating unit availability: " + e.getMessage());
         }
     }
-    
     
     public void memberikanRatingDanKomentar() {
         System.out.print("Masukkan kode unit yang ingin diberi rating dan komentar: ");
