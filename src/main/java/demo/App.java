@@ -17,6 +17,12 @@ public class App {
     static Connection connection;
     static Statement stmt;
 
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        App.connect();
+        App.instanceAllEntity();
+        App.interfaceInput();
+    }
+
     public static void connect(){
         try{
             App.sc = new Scanner(System.in);
@@ -40,11 +46,6 @@ public class App {
         agen = new Agen(sc, connection);
         pelanggan = new Pelanggan(sc, connection);
     }
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        App.connect();
-        App.instanceAllEntity();
-        App.interfaceInput();
-    }
 
     protected static void interfaceInput(){
         System.out.println("---- LOGIN SewaY ----");
@@ -60,7 +61,7 @@ public class App {
         switch (input) {
             case "1":
                 //masuk ke interface Login Agen
-                agen.interfaceLoginAgen();
+                agen.loginAgen();
                 break;
             case "2":
                 pelanggan.interfaceLoginPelanggan();
