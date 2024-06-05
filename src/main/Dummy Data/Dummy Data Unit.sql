@@ -1,5 +1,5 @@
 
-INSERT INTO Unit (kodeUnit, noUnit, lantai, Tower, statusKetersediaan, harga, Jenis) VALUES
+INSERT INTO Unit (kodeUnit, noUnit, lantai, idTower, statusKetersediaan, harga, Jenis) VALUES
 	('A01001', '1', '1', 'A', 'KOSONG', '209995', '2BR'),
 	('A01002', '2', '1', 'A', 'PENUH', '258300', 'STUDIO'),
 	('A01003', '3', '1', 'A', 'KOSONG', '249290', '2BR'),
