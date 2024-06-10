@@ -93,7 +93,7 @@ public class Agen extends App{
         System.out.println("---- Selamat Datang Agen SewaY ----");
         System.out.println("1) Kelola Data Unit.");
         System.out.println("2) Kelola Ketersediaan Unit.");
-        System.out.println("3) Melihat unit yang telah dipesan pada waktu tertentu.");
+        System.out.println("3) Melihat unit yang telah dipesan pada rentang waktu tertentu.");
         System.out.println("4) Melihat daftar check in dan check out pada tanggal tertentu.");
         System.out.println("5) Melihat laporan utilitas penyewaan unit-unit yang dikelola pada rentang waktu tertentu.");
         System.out.println("6) Exit.");

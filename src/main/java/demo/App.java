@@ -19,7 +19,7 @@ public class App {
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         App.connect();
-        App.instanceAllEntity();
+        // App.instanceAllEntity();
         App.interfaceInput();
     }
 
@@ -60,7 +60,6 @@ public class App {
 
         switch (input) {
             case "1":
-                //masuk ke interface Login Agen
                 agen.loginAgen();
                 break;
             case "2":
@@ -75,7 +74,7 @@ public class App {
         }
     }
 
-    protected static void instanceAllEntity(){
+    /* protected static void instanceAllEntity(){
         try{
             String createTableAgen = "CREATE TABLE Agen ("
             + "idAgen INT PRIMARY KEY IDENTITY(1,1) NOT NULL, "
@@ -151,7 +150,7 @@ public class App {
         }
         catch(SQLException e){
         }
-    }
+    } */
 
     protected static int generateOTP(){
         return (int) (Math.random()*99999) + 10000;

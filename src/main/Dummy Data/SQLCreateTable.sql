@@ -1,3 +1,9 @@
+--Create Table Kelurahan
+CREATE TABLE Kelurahan (
+idKelurahan INT PRIMARY KEY NOT NULL,
+namaKelurahan VARCHAR(30) NOT NULL
+)
+
 ---Create Table Agen
 CREATE TABLE Agen (
 idAgen INT PRIMARY KEY IDENTITY(1,1) NOT NULL, 
@@ -15,7 +21,7 @@ idPelanggan INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
 NIK VARCHAR(16) NOT NULL, 
 Nama VARCHAR(30) NOT NULL,
 NoHp VARCHAR(13) NOT NULL, 
-alamat VARCHAR(50) NOT NULL
+alamat VARCHAR(50) NOT NULL,
 idKelurahan INT
 FOREIGN KEY (idKelurahan) REFERENCES Kelurahan(idKelurahan)
 )
@@ -35,12 +41,6 @@ statusKetersediaan VARCHAR(6) NOT NULL,
 harga MONEY NOT NULL, 
 idTower VARCHAR(1) NOT NULL, 
 FOREIGN KEY (idTower) REFERENCES Tower(idTower)
-)
-
---Create Table Kelurahan
-CREATE TABLE Kelurahan (
-idKelurahan INT PRIMARY KEY NOT NULL,
-namaKelurahan VARCHAR(30) NOT NULL
 )
 
 --Create Table Kecamatan
