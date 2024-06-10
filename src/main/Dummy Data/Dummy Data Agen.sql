@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 INSERT INTO Agen (NIK, Nama, NoHp, alamat) VALUES ('7008944976637395', 'Kristina', '083939672013', 'Wylie');
 INSERT INTO Agen (NIK, Nama, NoHp, alamat) VALUES ('5321673718397440', 'Stevie', '089626347150', 'Enterprise');
 INSERT INTO Agen (NIK, Nama, NoHp, alamat) VALUES ('2828326723879057', 'Maritza', '084800417254', 'Charlottesville');
@@ -38,3 +39,49 @@ INSERT INTO Agen (NIK, Nama, NoHp, alamat) VALUES ('3893835055503824', 'Marlen',
 INSERT INTO Agen (NIK, Nama, NoHp, alamat) VALUES ('5300572426981455', 'Garfield', '084981217724', 'Sacramento');
 INSERT INTO Agen (NIK, Nama, NoHp, alamat) VALUES ('4014241687213592', 'Michaela', '083078535642', 'Logan');
 INSERT INTO Agen (NIK, Nama, NoHp, alamat) VALUES ('2592984707215910', 'Rudolph', '089907534619', 'Rochester');
+=======
+SET IDENTITY_INSERT Agen ON;
+
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('1', '7008944976637395', 'Kristina', '083939672013', 'Jl Perak 1', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('2', '5321673718397440', 'Stevie', '089626347150', 'Jl Perak 2', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('3', '2828326723879057', 'Maritza', '084800417254', 'Jl Perak 3', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('4', '7471479178521642', 'Noemi', '082891181028', 'Jl Perak 4', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('5', '4549625412529057', 'Dalton', '080960781485', 'Jl Perak 5', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('6', '3989006739979554', 'Cory', '082828063903',  'Jl Perak 6', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('7', '4953137911073650', 'Desmond', '086462174913', 'Jl Perak 7', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('8', '3821431795243140', 'Abbigail', '083392975112', 'Jl Perak 8', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('9', '7115080713684491', 'Louvenia', '080995637118', 'Jl Perak 9', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('10', '9996603475082564', 'Stanton', '087367912475', 'Jl Perak 10', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('11', '8342682458036061', 'Bonnie', '083412505789',  'Jl Perak 11', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('12', '5151711254571408', 'Trent', '088321002184', 'Jl Perak 12', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('13', '9963555049029870', 'Rollin', '086456645207', 'Jl Perak 13', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('14', '2352547614366102', 'Kennedy', '089138872140', 'Jl Perak 14', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('15', '8644543714242036', 'Glenda', '083057426827',  'Jl Perak 15', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('16', '6413133460420434', 'Dallin', '089076035652',  'Jl Perak 16', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('17', '1533325863294803', 'Dell', '088884489709',  'Jl Perak 17', '1');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('18', '3667006302854156', 'Ebony', '083860074505',  'Jl Emas 4', '2');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('19', '3305759745342550', 'Khalil', '089122529287',  'Jl Emas 5', '2');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('20', '8871948882090215', 'Jeremie', '084242350798', 'Jl Emas 6', '2');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('21', '6283405678553930', 'Jameson', '083281596204',  'Jl Emas 7', '2');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('22', '9805249405784367', 'Alyce', '087699299329', 'Jl Indrayasa 11', '3');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('23', '6872283134163109', 'Mozelle', '083219426086', 'Jl Indrayasa 12', '3');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('24', '7509799047554819', 'Chesley', '087797096635', 'Jl Indrayasa 13', '3');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('25', '3426106886922172', 'Einar', '083287464574', 'Jl Indrayasa 14', '3');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('26', '7946942730007315', 'Krystal', '085492461526', 'Jl Indrayasa 15', '3');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('27', '4029806937320232', 'Ayla', '080887304963', 'Jl Indrayasa 16', '3');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('28', '5586331639823961', 'Eldora', '089018450780', 'Jl Indrayasa 17', '3');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('29', '8280812874679733', 'Mauricio', '084223963363', 'Jl Indrayasa 18', '3');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('30', '7077842450843729', 'Monica', '085903253044',  'Jl Indrayasa 19', '3');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('31', '9261793007906852', 'Dudley', '082679114596',  'Jl Taruna 30', '4');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('32', '8651040817560059', 'Dino', '086201050639',  'Jl Taruna 31', '4');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('33', '4657544196753784', 'Dimitri', '080794935369', 'Jl Taruna 32', '4');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('34', '1634295979639940', 'Deangelo', '085414975187', 'Jl Taruna 33', '4');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('35', '7241316093945558', 'Isidro', '087892324205', 'Jl Taruna 34', '4');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('36', '5818035123995677', 'Camron', '082411605300', 'Jl Taruna 35', '4');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('37', '3893835055503824', 'Marlen', '083793708718', 'Jl Taruna 36', '4');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('38', '5300572426981455', 'Garfield', '084981217724', 'Jl Taruna 37', '4');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('39', '4014241687213592', 'Michaela', '083078535642', 'Jl Taruna 38', '4');
+INSERT INTO Agen (idAgen, NIK, Nama, NoHp, alamat, idKelurahan) VALUES ('40', '2592984707215910', 'Rudolph', '089907534619',  'Jl Taruna 39', '4');
+
+SET IDENTITY_INSERT Agen OFF;
+>>>>>>> a8019eb4b223e709ac9873600dc7f9d59695c98d
