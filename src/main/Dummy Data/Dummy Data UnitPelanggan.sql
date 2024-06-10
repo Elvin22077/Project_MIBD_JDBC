@@ -1,13 +1,4 @@
-CREATE TABLE UnitPelanggan(
-	kodeUnit VARCHAR(6),
-	idPelanggan INT,
-	waktuSewa DATE,
-	waktuSelesai DATE
-)
 
-DROP TABLE UnitPelanggan
-
-SELECT * FROM UnitPelanggan
 
 INSERT INTO UnitPelanggan(kodeUnit, idPelanggan, waktuSewa, waktuSelesai) VALUES ('A01002', 1, '20240101', '20240102')
 INSERT INTO UnitPelanggan(kodeUnit, idPelanggan, waktuSewa, waktuSelesai) VALUES ('A02004', 12, '20240201', '20240203')
