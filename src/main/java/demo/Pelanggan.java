@@ -37,14 +37,7 @@ public class Pelanggan{
                 break;
             case "3":
                 App.interfaceInput();
-<<<<<<< HEAD
                 return;
-=======
-<<<<<<< HEAD
-                break;
-=======
->>>>>>> a8019eb4b223e709ac9873600dc7f9d59695c98d
->>>>>>> a54899da91258cc7c349305c81debb5e7524131f
             default:
                 App.interfaceInput();
                 return;
@@ -163,14 +156,8 @@ public class Pelanggan{
         System.out.println("---- UTAMA PELANGGAN SewaY ----");
         System.out.println("1) Mencari apartemen.");
         System.out.println("2) Memesan unit apartemen.");
-<<<<<<< HEAD
-        System.out.println("3) Check in sesuai tanggal pemesanan.");
-        System.out.println("4) Memberikan rating dan komentar atas unit apartemen yang disewa setelah check out.");
-        System.out.println("5) Exit.");
-=======
         System.out.println("3) Checkout dan Memberikan rating dan komentar");
         System.out.println("4) Exit.");
->>>>>>> a8019eb4b223e709ac9873600dc7f9d59695c98d
         System.out.println();
         System.out.print("Masukkan pilihan(angkanya saja): ");
         

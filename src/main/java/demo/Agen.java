@@ -376,14 +376,8 @@ public class Agen extends App{
                         rs.getDouble("harga"));
             }
             System.out.println();
-<<<<<<< HEAD
             pengelolaanUnit();
         } catch (SQLException e) {
-=======
-            interfaceUtamaAgen();
-        }
-        catch(SQLException e){
->>>>>>> a54899da91258cc7c349305c81debb5e7524131f
             e.printStackTrace();
         }
     }
@@ -427,14 +421,8 @@ public class Agen extends App{
                         rsCheckOut.getString("Nama"));
             }
             System.out.println();
-<<<<<<< HEAD
             pengelolaanUnit();
         } catch (SQLException e) {
-=======
-            interfaceUtamaAgen();
-        }
-        catch(SQLException e){
->>>>>>> a54899da91258cc7c349305c81debb5e7524131f
             System.out.println("Gagal mencari data check-in dan check-out");
             System.out.println();
             interfaceUtamaAgen();
