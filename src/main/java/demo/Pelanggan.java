@@ -37,10 +37,6 @@ public class Pelanggan{
                 break;
             case "3":
                 App.interfaceInput();
-<<<<<<< HEAD
-                break;
-=======
->>>>>>> a8019eb4b223e709ac9873600dc7f9d59695c98d
             default:
                 App.interfaceInput();
                 return;

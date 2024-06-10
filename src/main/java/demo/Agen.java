@@ -7,6 +7,7 @@ import java.sql.*;
 public class Agen extends App{
     private Scanner sc;
     private Connection connection;
+    private int idAgen;
 
     public Agen(Scanner sc, Connection connection){
         super();
@@ -20,38 +21,48 @@ public class Agen extends App{
         sc.nextLine();
 
         try{
-            String query = "SELECT NIK FROM Agen WHERE NoHp = ?";
+            String query = "SELECT * FROM Agen WHERE NoHp = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setString(1, noHp);
 
-            ResultSet tempAgen = preparedStatement.executeQuery();
+            ResultSet rs = preparedStatement.executeQuery();
 
-            if(!tempAgen.isBeforeFirst()){
+            if(!rs.isBeforeFirst()){
                 System.out.println("Maaf, nomor Hp belum terdaftar. ");
                 System.out.println();
                 super.interfaceInput();
             }
-            else{
+            else { //jika noHp terdaftar
+
+                int OTP = App.generateOTP();
+                System.out.println("OTP untuk registrasi Agen: "+OTP);
+
                 boolean login = false;
-                int OTP = super.generateOTP();
-                System.out.println("OTP untuk login: "+OTP);
-                while(!login){
-                    System.out.println();
-                    System.out.print("Masukkan OTP: ");
-                    int inputOTP = sc.nextInt();
-                    sc.nextLine();
-                    if(OTP==inputOTP){
-                        System.out.println("Berhasil login sebagai agen! Selamat Datang!");
+
+                while (!login) {
+                    System.out.print("Masukkan kode OTP: ");
+                    int input = sc.nextInt();
+
+                    if(input == OTP){
+                        System.out.println();
+                        String name = null;
+                        while(rs.next()){
+                            name = rs.getString("Nama");
+                            this.idAgen = rs.getInt("idAgen");
+                            break;
+                        }
+                        System.out.printf("Login Agen sebagai %s berhasil!\n", name);
                         login = true;
                         System.out.println();
-                        interfaceLoginAgen();
+                        interfaceUtamaAgen();
                     }
                     else{
-                        System.out.println("Maaf, kode OTP salah. Silakan coba lagi.");
+                        System.out.println("Kode OTP salah, harap masukkan kembali.");
+                        System.out.println();
                     }
                 }
-            }   
+            }
         }
         catch(SQLException e){
             System.out.println("Gagal login sebagai agen.");
@@ -177,6 +188,10 @@ public class Agen extends App{
         }
     }
 
+    int getIdAgen(){
+        return this.idAgen;
+    }
+
     public void pengelolaanUnit(){
         System.out.println("---- PENGELOLAAN UNIT SewaY ----");
         System.out.println("1) Melihat status unit.");
@@ -198,28 +213,26 @@ public class Agen extends App{
                     String query = "SELECT "
                         + "Unit.kodeUnit, "
                         + "Unit.statusKetersediaan, "
-                        + "Unit.harga, "
-                        + "Transaksi.waktuSewa, "
-                        + "Transaksi.waktuSelesai "
-                        + "FROM Unit JOIN Transaksi ON Unit.kodeUnit = Transaksi.kodeUnit";
+                        + "Unit.harga "
+                        + "FROM Unit JOIN Mengelola ON Unit.kodeUnit = Mengelola.kodeUnit "
+                        + "WHERE Mengelola.idAgen = ?";
                     PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+                    preparedStatement.setInt(1, this.idAgen);
     
                     ResultSet rs = preparedStatement.executeQuery();
-                    System.out.printf("%-15s%-25s%-20s%-20s%-20s%n", 
+
+                    System.out.printf("%-15s%-25s%-20s%n", 
                         "Kode Unit",
                         "Status Ketersediaan",
-                        "Harga per malam",
-                        "Waktu Mulai Sewa",
-                        "Waktu Selesai Sewa"
+                        "Harga per malam"
                     );
                     while(rs.next()){
                         // kodeUnit, statusKetersediaan, harga, waktuSewa, waktuSelesai
-                        System.out.printf("%-15s%-25s%-20s%-20s%-20s%n", 
+                        System.out.printf("%-15s%-25s%-20s%n", 
                         rs.getString("kodeUnit"),
                         rs.getString("statusKetersediaan"),
-                        rs.getFloat("harga"),
-                        rs.getDate("waktuSewa"),
-                        rs.getDate("waktuSelesai"));
+                        rs.getFloat("harga"));
                     }
                     System.out.println();
                     pengelolaanUnit();
@@ -340,21 +353,25 @@ public class Agen extends App{
     
 
     public void melihatUnit() {
-        System.out.print("Masukkan tanggal untuk melihat unit yang tersedia (format: yyyy-mm-dd): ");
-        String tanggal = sc.next();
+        System.out.print("Masukkan tanggal untuk melihat unit yang tersedia (format: yyyy-mm-dd): \n");
+        System.out.print("Tanggal mulai: ");
+        String tanggalMulai = sc.next();
+        sc.nextLine();
+        System.out.print("Tanggal selesai: ");
+        String tanggalSelesai = sc.next();
         sc.nextLine();
     
         try {
             String query = "SELECT Unit.kodeUnit, Unit.noUnit, Unit.lantai, Unit.jenis, Unit.statusKetersediaan, Unit.harga " +
                            "FROM Unit " +
                            "LEFT JOIN Transaksi ON Unit.kodeUnit = Transaksi.kodeUnit " +
-                           "AND Transaksi.waktuSewa <= ? " +
-                           "AND Transaksi.waktuSelesai >= ? " +
-                           "WHERE Transaksi.kodeUnit IS NULL";
+                           "WHERE Transaksi.kodeUnit IS NOT NULL "+
+                           "AND Transaksi.waktuSewa >= ? " +
+                           "AND Transaksi.waktuSelesai <= ?";
     
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, tanggal);
-            preparedStatement.setString(2, tanggal);
+            preparedStatement.setString(1, tanggalMulai);
+            preparedStatement.setString(2, tanggalSelesai);
     
             ResultSet rs = preparedStatement.executeQuery();
     
@@ -479,7 +496,7 @@ public class Agen extends App{
     
             System.out.printf("%-20s%-30s%-30s%n",
                               "Kode Unit",
-                              "Banyak Unit yang disewa",
+                              "Berapa kali unit disewakan",
                               "Total harga sewa unit");
             while(rs.next()){
                 System.out.printf("%-20s%-30d%-30f%n", 
