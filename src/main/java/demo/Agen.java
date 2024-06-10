@@ -164,11 +164,11 @@ public class Agen extends App{
                     preparedStatement.executeUpdate();
 
                     System.out.println("Jenis unit sudah dirubah!\n");
-                    mengubahJenisUnit();
+                    interfaceUtamaAgen();
                 }
                 catch(SQLException e){
                     System.out.println("Maaf, gagal mengubah jenis Unit.\n");
-                    mengubahJenisUnit();
+                    interfaceUtamaAgen();
                 }
                 break;
         
