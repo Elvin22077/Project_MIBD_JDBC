@@ -35,6 +35,9 @@ public class Pelanggan{
             case "2":
                 loginPelanggan();
                 break;
+            case "3":
+                App.interfaceInput();
+                break;
             default:
                 App.interfaceInput();
                 break;
@@ -153,7 +156,7 @@ public class Pelanggan{
         System.out.println("---- UTAMA PELANGGAN SewaY ----");
         System.out.println("1) Mencari apartemen.");
         System.out.println("2) Memesan unit apartemen.");
-        System.out.println("3) Check in dan check out sesuai tanggal pemesanan.");
+        System.out.println("3) Check in sesuai tanggal pemesanan.");
         System.out.println("4) Memberikan rating dan komentar atas unit apartemen yang disewa setelah check out.");
         System.out.println("5) Exit.");
         System.out.println();

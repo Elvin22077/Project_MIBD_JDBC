@@ -253,7 +253,7 @@ public class Agen extends App{
                             preparedStatement.setString(2, kodeUnit);
 
                             preparedStatement.executeUpdate();
-                            System.out.println("Berhasil mengubah tanggal akhir sewa dari unit.\n");
+                            System.out.println("Berhasil mengubah tanggal mulai sewa dari unit.\n");
                             pengelolaanUnit();
                             break;
 
@@ -379,7 +379,7 @@ public class Agen extends App{
                 }
             }
             System.out.println();
-            pengelolaanUnit();
+            interfaceUtamaAgen();
         }
         catch(SQLException e){
             e.printStackTrace();
@@ -424,12 +424,12 @@ public class Agen extends App{
                 rsCekOut.getString("Nama"));
             }
             System.out.println();
-            pengelolaanUnit();
+            interfaceUtamaAgen();
         }
         catch(SQLException e){
             System.out.println("Gagal mencari data check-in dan check-out");
             System.out.println();
-            pengelolaanUnit();
+            interfaceUtamaAgen();
         }
     }
 

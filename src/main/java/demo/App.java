@@ -28,7 +28,7 @@ public class App {
             App.sc = new Scanner(System.in);
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             // Buat connection URL, username, and password
-            String url = "jdbc:sqlserver://MSI\\SQLEXPRESS01\\instanceName:50089;databaseName=Project_MIBD_JDBC";
+            String url = "jdbc:sqlserver://MSI\\SQLEXPRESS\\instanceName:50089;databaseName=Project_MIBD_JDBC";
             String username = "i22077"; 
             String password = "i22077";
 
@@ -150,7 +150,6 @@ public class App {
             stmt.executeUpdate(createTableUnitPelanggan);
         }
         catch(SQLException e){
-            System.out.println("Gagal membuat tabel.");
         }
     }
 
@@ -159,4 +158,3 @@ public class App {
     }
     
 }
-
