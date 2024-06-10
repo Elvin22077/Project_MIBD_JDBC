@@ -10,7 +10,8 @@ FOREIGN KEY (idKelurahan) REFERENCES Kelurahan(idKelurahan)
 )
 
 --Create Table Pelanggan
-CREATE TABLE Pelanggan (idPelanggan INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+CREATE TABLE Pelanggan (
+idPelanggan INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
 NIK VARCHAR(16) NOT NULL, 
 Nama VARCHAR(30) NOT NULL,
 NoHp VARCHAR(13) NOT NULL, 
@@ -42,6 +43,12 @@ idKelurahan INT PRIMARY KEY NOT NULL,
 namaKelurahan VARCHAR(30) NOT NULL
 )
 
+--Create Table Kecamatan
+CREATE TABLE Kecamatan(
+	idKecamatan INT PRIMARY KEY NOT NULL,
+	namaKecamatan VARCHAR(30)
+)
+
 --Create Table Review
 CREATE TABLE Review (
 idPelanggan INT NOT NULL, 
@@ -60,17 +67,16 @@ FOREIGN KEY (kodeUnit) REFERENCES Unit(kodeUnit),
 FOREIGN KEY (idAgen) REFERENCES Agen(idAgen)
 )
 
---Create Table Transaksi
+-- Create Table Transaksi
 CREATE TABLE Transaksi (
-idTransaksi INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
-kodeUnit VARCHAR(6) NOT NULL, 
-idPelanggan INT NOT NULL, 
-idAgen INT NOT NULL,
-waktuSewa DATE NOT NULL, 
-waktuSelesai DATE NOT NULL, 
-harga MONEY NOT NULL, 
-FOREIGN KEY (kodeUnit) REFERENCES Unit(kodeUnit), 
-FOREIGN KEY (idPelanggan) REFERENCES Pelanggan(idPelanggan),
-FOREIGN KEY (idAgen) REFERENCES Agen(idAgen),
-FOREIGN KEY (harga) REFERENCES Unit(harga),
-)
+    idTransaksi INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    kodeUnit VARCHAR(6) NOT NULL, 
+    idPelanggan INT NOT NULL, 
+    idAgen INT NOT NULL,
+    waktuSewa DATE NOT NULL, 
+    waktuSelesai DATE NOT NULL, 
+    harga MONEY NOT NULL, 
+    FOREIGN KEY (kodeUnit) REFERENCES Unit(kodeUnit), 
+    FOREIGN KEY (idPelanggan) REFERENCES Pelanggan(idPelanggan),
+    FOREIGN KEY (idAgen) REFERENCES Agen(idAgen)
+);

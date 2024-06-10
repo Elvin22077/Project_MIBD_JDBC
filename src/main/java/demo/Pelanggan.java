@@ -225,13 +225,23 @@ public class Pelanggan{
             String endDate = sc.nextLine();
     
             String query = "SELECT U.kodeUnit, U.harga, U.statusKetersediaan " +
-                           "FROM UnitPelanggan UP " +
-                           "JOIN Unit U ON UP.kodeUnit = U.kodeUnit " +
-                           "WHERE UP.waktuSewa >= ? AND UP.waktuSelesai <= ? " +
-                           "AND U.statusKetersediaan = 'kosong'";
+                           "FROM Unit U " +
+                           "WHERE U.statusKetersediaan = 'kosong' " +
+                           "AND U.kodeUnit NOT IN (" +
+                           "    SELECT T.kodeUnit " +
+                           "    FROM Transaksi T " +
+                           "    WHERE (T.waktuSewa <= ? AND T.waktuSelesai >= ?) " +
+                           "    OR (T.waktuSewa <= ? AND T.waktuSelesai >= ?) " +
+                           "    OR (T.waktuSewa >= ? AND T.waktuSelesai <= ?)" +
+                           ")";
+            
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, startDate);
-            preparedStatement.setString(2, endDate);
+            preparedStatement.setString(1, endDate); // Check if any transaction ends after startDate
+            preparedStatement.setString(2, startDate); // Check if any transaction starts before endDate
+            preparedStatement.setString(3, endDate); // Check if any transaction ends after startDate
+            preparedStatement.setString(4, startDate); // Check if any transaction starts before endDate
+            preparedStatement.setString(5, startDate); // Check if any transaction starts and ends within the range
+            preparedStatement.setString(6, endDate); // Check if any transaction starts and ends within the range
     
             ResultSet rs = preparedStatement.executeQuery();
     
@@ -246,6 +256,7 @@ public class Pelanggan{
             System.out.println("Error: " + e.getMessage());
         }
     }
+    
     
     public void mencariApartemenBerdasarkanHarga() {
         try {
@@ -320,7 +331,10 @@ public class Pelanggan{
                 System.out.println("Status Ketersediaan: " + rs.getString("statusKetersediaan"));
                 System.out.println();
     
-                if (rs.getString("statusKetersediaan").equals("Tersedia")) {
+                if (rs.getString("statusKetersediaan").equals("KOSONG")) {
+                    // Get the price of the unit
+                    float hargaUnit = rs.getFloat("harga");
+    
                     // Find agent ID managing the unit
                     int idAgen;
                     query = "SELECT idAgen FROM Mengelola WHERE kodeUnit = ?";
@@ -341,15 +355,15 @@ public class Pelanggan{
                     System.out.print("Masukkan tanggal selesai sewa (format: yyyy-mm-dd): ");
                     String tglSelesai = sc.next();
                     sc.nextLine();
-    
-                    // Insert transaction data
-                    query = "INSERT INTO Transaksi (kodeUnit, idPelanggan, idAgen, waktuSewa, waktuSelesai) VALUES (?, ?, ?, ?, ?)";
+
+                    query = "INSERT INTO Transaksi (kodeUnit, idPelanggan, idAgen, waktuSewa, waktuSelesai, harga) VALUES (?, ?, ?, ?, ?, ?)";
                     preparedStatement = connection.prepareStatement(query);
                     preparedStatement.setString(1, kodeUnit);
                     preparedStatement.setInt(2, this.getIdPelanggan());
                     preparedStatement.setInt(3, idAgen);
                     preparedStatement.setString(4, tglMulai);
                     preparedStatement.setString(5, tglSelesai);
+                    preparedStatement.setFloat(6, hargaUnit);
     
                     preparedStatement.executeUpdate();
                     updateUnitAvailability(kodeUnit);
@@ -362,19 +376,6 @@ public class Pelanggan{
                 System.out.println("Unit apartemen tidak ditemukan.");
             }
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-    
-    public void checkIn() {
-        System.out.print("Masukkan kode unit yang ingin dicek in: ");
-        String kodeUnit = sc.next();
-        sc.nextLine();
-    
-        try {
-            //update menjadi PENUH
-            updateUnitAvailability(kodeUnit);
-        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
