@@ -1,0 +1,11 @@
+drop table Agen
+drop table Kecamatan
+drop table Kelurahan
+drop table Pelanggan
+drop table PelangganKelurahan
+drop table Review
+drop table Unit
+drop table Tower
+drop table UnitPelanggan
+drop table mengelola
+drop table transaksi

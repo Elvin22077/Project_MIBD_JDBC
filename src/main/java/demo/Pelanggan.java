@@ -35,6 +35,8 @@ public class Pelanggan{
             case "2":
                 loginPelanggan();
                 break;
+            case "3":
+                App.interfaceInput();
             default:
                 App.interfaceInput();
                 break;
@@ -153,9 +155,8 @@ public class Pelanggan{
         System.out.println("---- UTAMA PELANGGAN SewaY ----");
         System.out.println("1) Mencari apartemen.");
         System.out.println("2) Memesan unit apartemen.");
-        System.out.println("3) Check in dan check out sesuai tanggal pemesanan.");
-        System.out.println("4) Memberikan rating dan komentar atas unit apartemen yang disewa setelah check out.");
-        System.out.println("5) Exit.");
+        System.out.println("3) Checkout dan Memberikan rating dan komentar");
+        System.out.println("4) Exit.");
         System.out.println();
         System.out.print("Masukkan pilihan(angkanya saja): ");
         
@@ -170,12 +171,9 @@ public class Pelanggan{
                 memesanUnitApartemen();
                 break;
             case "3":
-                checkIn();
-                break;
-            case "4":
                 memberikanRatingDanKomentar();
                 break;
-            case "5":
+            case "4":
                 interfaceLoginPelanggan();
                 return;
             default:
@@ -308,6 +306,7 @@ public class Pelanggan{
         sc.nextLine();
     
         try {
+            // Check unit details and availability
             String query = "SELECT * FROM Unit WHERE kodeUnit = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, kodeUnit);
@@ -321,24 +320,44 @@ public class Pelanggan{
                 System.out.println("Status Ketersediaan: " + rs.getString("statusKetersediaan"));
                 System.out.println();
     
-                System.out.print("Masukkan tanggal mulai sewa (format: yyyy-mm-dd): ");
-                String tglMulai = sc.next();
-                sc.nextLine();
+                if (rs.getString("statusKetersediaan").equals("Tersedia")) {
+                    // Find agent ID managing the unit
+                    int idAgen;
+                    query = "SELECT idAgen FROM Mengelola WHERE kodeUnit = ?";
+                    preparedStatement = connection.prepareStatement(query);
+                    preparedStatement.setString(1, kodeUnit);
+                    rs = preparedStatement.executeQuery();
     
-                System.out.print("Masukkan tanggal selesai sewa (format: yyyy-mm-dd): ");
-                String tglSelesai = sc.next();
-                sc.nextLine();
+                    if (rs.next()) {
+                        idAgen = rs.getInt("idAgen");
+                    } else {
+                        throw new SQLException("Agen untuk unit ini tidak ditemukan.");
+                    }
     
-                query = "INSERT INTO UnitPelanggan (kodeUnit, idPelanggan, waktuSewa, waktuSelesai) VALUES (?, ?, ?, ?)";
-                preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setString(1, kodeUnit);
-                preparedStatement.setInt(2, this.getIdPelanggan());
-                preparedStatement.setString(3, tglMulai);
-                preparedStatement.setString(4, tglSelesai);
+                    System.out.print("Masukkan tanggal mulai sewa (format: yyyy-mm-dd): ");
+                    String tglMulai = sc.next();
+                    sc.nextLine();
     
-                preparedStatement.executeUpdate();
+                    System.out.print("Masukkan tanggal selesai sewa (format: yyyy-mm-dd): ");
+                    String tglSelesai = sc.next();
+                    sc.nextLine();
     
-                System.out.println("Unit apartemen berhasil dipesan.");
+                    // Insert transaction data
+                    query = "INSERT INTO Transaksi (kodeUnit, idPelanggan, idAgen, waktuSewa, waktuSelesai) VALUES (?, ?, ?, ?, ?)";
+                    preparedStatement = connection.prepareStatement(query);
+                    preparedStatement.setString(1, kodeUnit);
+                    preparedStatement.setInt(2, this.getIdPelanggan());
+                    preparedStatement.setInt(3, idAgen);
+                    preparedStatement.setString(4, tglMulai);
+                    preparedStatement.setString(5, tglSelesai);
+    
+                    preparedStatement.executeUpdate();
+                    updateUnitAvailability(kodeUnit);
+    
+                    System.out.println("Unit apartemen berhasil dipesan.");
+                } else {
+                    System.out.println("Unit apartemen tidak tersedia.");
+                }
             } else {
                 System.out.println("Unit apartemen tidak ditemukan.");
             }
@@ -423,13 +442,13 @@ public class Pelanggan{
 
     public void updateUnitAvailabilityToEmpty(String kodeUnit) {
         try {
-            String updateQuery = "UPDATE Unit SET statusKetersediaan = 'kosong' WHERE kodeUnit = ?";
+            String updateQuery = "UPDATE Unit SET statusKetersediaan = 'KOSONG' WHERE kodeUnit = ?";
             PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
             updateStatement.setString(1, kodeUnit);
             int rowsAffected = updateStatement.executeUpdate();
     
             if (rowsAffected > 0) {
-                System.out.println("Unit availability updated to 'kosong' successfully.");
+                System.out.println("Unit availability updated to 'KOSONG' successfully.");
             } else {
                 System.out.println("Unit with kodeUnit '" + kodeUnit + "' not found.");
             }
